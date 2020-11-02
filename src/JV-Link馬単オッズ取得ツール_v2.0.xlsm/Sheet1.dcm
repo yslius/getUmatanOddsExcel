@@ -1,0 +1,54 @@
+VERSION 1.0 CLASS
+BEGIN
+  MultiUse = -1  'True
+END
+Attribute VB_Name = "Sheet1"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = False
+Attribute VB_PredeclaredId = True
+Attribute VB_Exposed = True
+Private Sub CommandButton1_Click()
+    
+    UserForm1.Show vbModeless
+    
+End Sub
+
+Private Sub CommandButton2_Click()
+    pathTarg = getFolderPath()
+    If pathTarg = "" Then Exit Sub
+    
+    ThisWorkbook.Sheets(1).OLEObjects("TextBox1").Object.Text = pathTarg
+End Sub
+
+Function getFolderPath()
+    With Application.FileDialog(msoFileDialogFolderPicker)
+        .Title = "フォルダの指定"
+        .InitialFileName = ThisWorkbook.Path & "\"
+        If .Show = 0 Then
+            Exit Function
+        End If
+        pathTarg = .SelectedItems(1)
+    End With
+    
+    '日付が入っているフォルダかチェック
+    tmp1 = Right(pathTarg, Len(pathTarg) - InStrRev(pathTarg, "\"))
+    tmp = Replace(tmp1, "月", "")
+    tmp = Replace(tmp, "日", "")
+    tmp = StrConv(tmp, vbNarrow)
+
+    Dim reg As Object
+    Set reg = CreateObject("VBScript.RegExp")
+    With reg
+        .Pattern = "\d{4}"      'パターンを指定
+        .IgnoreCase = False     '大文字と小文字を区別するか(False)、しないか(True)
+        .Global = True          '文字列全体を検索するか(True)、しないか(False)
+    End With
+    Dim str As String
+'    If Not (reg.Test(tmp) And Len(tmp1) = 6 And _
+'        InStr(tmp1, "月") > 0 And InStr(tmp1, "日")) > 0 Then
+'        MsgBox "正しいフォルダを選択してください。"
+'        Exit Function
+'    End If
+    getFolderPath = pathTarg
+    
+End Function
