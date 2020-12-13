@@ -51,6 +51,7 @@ Sub GetRealTimeUmatanOdds(datacsv As datacsv, strdateTarg As String, _
     Dim UmatanOdd As UmatanOdds
     numUma = Val(mO4Data.SyussoTosu)
     If numUma = 0 Then numUma = Val(mO4Data.TorokuTosu)
+    
     For i = 0 To 305 'UBound(mO4Data.OddsUmatanInfo)
         If Trim(mO4Data.OddsUmatanInfo(i).Kumi) <> "" And _
             Trim(mO4Data.OddsUmatanInfo(i).Odds <> "") And _
@@ -82,8 +83,9 @@ Sub GetRealTimeUmatanOdds(datacsv As datacsv, strdateTarg As String, _
 
     End If
     
+    ' êlãCèáÇì¸ÇÍÇÈ
     Dim collUmatanOdd As UmatanOdds
-    For i = 1 To numUma
+    For i = 1 To Val(mO4Data.TorokuTosu)
         cnt = 1
         For Each collUmatanOdd In collUmatanOdds
             If Val(collUmatanOdd.Umaban1) = Val(mO1Data.OddsTansyoInfo(i - 1).Umaban) Then
