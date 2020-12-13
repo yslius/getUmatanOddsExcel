@@ -110,7 +110,9 @@ CommandButton1_END:
     DLflg = False
     
     Unload UserForm1
-
+    
+    WBbase.Save
+    
 End Sub
 
 Function findAlreadyDate(strdateTarg As String) As Long
