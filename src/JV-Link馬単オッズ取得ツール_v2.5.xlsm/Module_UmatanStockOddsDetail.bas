@@ -44,7 +44,7 @@ Sub GetStockUmatanOdds(datacsv As datacsv, strdateTarg As String, _
     codeLength = 840000
     Dim collOutput As Collection
     Set collOutput = New Collection
-    
+    Dim cnt As Long
     Do While retval <> 0
         retval = UserForm1.JVLink1.JVRead(buff, codeLength, filename)
         If (retval < -1) Then GoTo ERROR_PROCESS
@@ -64,6 +64,10 @@ Sub GetStockUmatanOdds(datacsv As datacsv, strdateTarg As String, _
             If Mid(buff, 12, 8) = strdateTarg Then
                 collOutput.Add (buff)
             End If
+        ElseIf isCalcSanrentan = False And Left(buff, 2) = "O6" Then
+            If Mid(buff, 12, 8) = strdateTarg Then
+                isGetData = True
+            End If
         ElseIf isCalcSanrentan And Left(buff, 2) = "O6" Then
             If Mid(buff, 12, 8) = strdateTarg Then
                 collOutput.Add (buff)
@@ -73,8 +77,10 @@ Sub GetStockUmatanOdds(datacsv As datacsv, strdateTarg As String, _
             UserForm1.JVLink1.JVSkip
         End If
         DoEvents
+        cnt = cnt + 1
 LOOP_NEXT1:
     Loop
+    Debug.Print cnt
     
 LOOP_END2:
 

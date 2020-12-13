@@ -17,6 +17,7 @@ Dim Cancelflg As Boolean
 Dim DLflg As Boolean
 Private isEvents As Boolean
 
+
 Private Sub UserForm_Initialize()
    
     Set WBbase = ThisWorkbook
@@ -49,11 +50,11 @@ Sub selectPrevious()
     Next
     
     If isAlready Then
-        colT = 2
-        Do While WSbase.Cells(i, colT) <> ""
-            Me.ListBox4.AddItem WSbase.Cells(i, colT)
-            colT = colT + 1
-        Loop
+'        colT = 2
+'        Do While WSbase.Cells(i, colT) <> ""
+'            Me.ListBox4.AddItem WSbase.Cells(i, colT)
+'            colT = colT + 1
+'        Loop
         isEvents = False
         Call getDateYear(Left(WSbase.Cells(i, 1), 4))
         Call getDateMonth(Mid(WSbase.Cells(i, 1), 5, 2))
@@ -80,8 +81,25 @@ Sub getPlacePrevious(i)
             Me.ListBox4.AddItem WSbase.Cells(i, j)
         End If
     Next j
+    If WSbase.Cells(i, 6) <> "" Then
+        Call getPlace(WSbase.Cells(i, 6))
+    End If
+    colT = 7
+    Do While WSbase.Cells(i, colT) <> ""
+        Me.ListBox5.AddItem WSbase.Cells(i, colT)
+        colT = colT + 1
+    Loop
+    
 End Sub
 
+Sub getPlace(placeT)
+    For i = 0 To Me.ListBox4.ListCount - 1
+        If placeT = Me.ListBox4.List(i) Then
+            Me.ListBox4.Selected(i) = True
+            Exit For
+        End If
+    Next i
+End Sub
 
 Sub getDateYear(yearT)
     Set WBbase = ThisWorkbook
@@ -110,7 +128,9 @@ Private Sub CommandButton4_Click()
 End Sub
 
 Private Sub ListBox1_Click()
-
+    If Not isEvents Then
+        Exit Sub
+    End If
     Me.ListBox2.Locked = True
     Me.ListBox3.Locked = True
     Me.ListBox4.Locked = True
@@ -277,7 +297,9 @@ End Sub
 
 
 Private Sub ListBox4_Click()
-
+    If Not isEvents Then
+        Exit Sub
+    End If
     Me.ListBox1.Locked = True
     Me.ListBox2.Locked = True
     Me.ListBox3.Locked = True
@@ -306,7 +328,8 @@ Private Sub ListBox4_Click()
 '        targJyo = Me.ListBox4.Text
         targJyo = Me.ListBox4.List(Me.ListBox4.ListIndex)
     End If
-    Call GetRaceNumInfo(targdate, targJyo)
+    Set colRace = GetRaceNumInfo(targdate, targJyo)
+    Call putPreviousRace(targdate, targJyo, colRace)
     
     Me.ListBox1.Locked = False
     Me.ListBox2.Locked = False
@@ -317,8 +340,34 @@ Private Sub ListBox4_Click()
     
 End Sub
 
-Private Sub ListBox5_Click()
+Sub putPreviousRace(targdate, targJyo, colRace)
+    Set WBbase = ThisWorkbook
+    Set WSbase = WBbase.Sheets("äJç√ì˙")
+    WSbase.Range(WSbase.Cells(1, 6), _
+    WSbase.Cells(WSbase.Rows.Count, WSbase.Columns.Count)).ClearContents
+    With WSbase
+    rowEnd = .Cells(.Rows.Count, 1).End(xlUp).row
+    colT = 7
+    For i = 1 To rowEnd
+        If CStr(.Cells(i, 1)) = targdate Then
+            .Cells(i, 6) = targJyo
+            For Each ele In colRace
+                .Cells(i, colT) = ele
+                colT = colT + 1
+            Next
+            
+        End If
+    Next i
+    End With
+End Sub
 
+Private Sub ListBox5_Click()
+    If Not isEvents Then
+        Exit Sub
+    End If
+'    Me.Repaint
+'    DoEvents
+'    Debug.Print "ListBox5_Click"
     Me.ListBox1.Locked = True
     Me.ListBox2.Locked = True
     Me.ListBox3.Locked = True
@@ -353,6 +402,7 @@ Private Sub ListBox5_Click()
     
     Call GetRaceUma(targdate, targJyo, racenum)
     
+'    Debug.Print "ListBox5_Click return"
     Me.ListBox1.Locked = False
     Me.ListBox2.Locked = False
     Me.ListBox3.Locked = False
@@ -424,5 +474,8 @@ Private Sub CommandButton5_Click()
     Me.ListBox5.Locked = False
     Me.ListBox6.Locked = False
     Me.CommandButton5.Locked = False
+    
+    Unload Me
+    UserForm1.Show vbModeless
     
 End Sub

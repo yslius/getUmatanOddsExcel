@@ -326,7 +326,7 @@ Sub GetPlaceInfoZ(targdate)
     
 End Sub
 
-Sub GetRaceNumInfo(targdate, targJyo)
+Function GetRaceNumInfo(targdate, targJyo) As Collection
     Dim retval As Long
     Dim readcount As Long
     Dim dlcount As Long
@@ -336,6 +336,7 @@ Sub GetRaceNumInfo(targdate, targJyo)
     Dim filename As String
     Dim opt As Integer
     Dim dateTarg As Date
+    Dim colRace As New Collection
 
     Cancelflg = False
     DLflg = False
@@ -407,6 +408,7 @@ Sub GetRaceNumInfo(targdate, targJyo)
                 If tmpJyo = targJyo Then
                     isIndata = True
                     UserForm1.ListBox5.AddItem mRaData.id.racenum
+                    colRace.Add mRaData.id.racenum
                 End If
             End If
         Else
@@ -427,8 +429,9 @@ LOOP_END:
     End If
     UserForm1.CommandButton3.Caption = "Exit"
     DLflg = False
+    Set GetRaceNumInfo = colRace
 
-End Sub
+End Function
 
 Sub GetRaceUma(targdate, targJyo, racenum)
     Set WBbase = ThisWorkbook
@@ -488,11 +491,13 @@ Sub GetRaceUma(targdate, targJyo, racenum)
         UserForm1.Label1.Caption = dlcount & "ファイル中 " & status & " ファイルダウンロード完了"
         DoEvents
         Sleep (120)
+'        Debug.Print "status:" & status
     Loop
     
     Cancelflg = False
     retval = 1
     cnt = 1
+    cntWhile = 1
     isIntoSE = False
     While retval <> 0
         'キャンセルボタンチェック
@@ -500,6 +505,7 @@ Sub GetRaceUma(targdate, targJyo, racenum)
 
         'JVOpenで指定したデータを１レコードずつ取り込み
         retval = UserForm1.JVLink1.JVRead(buff, 40000, filename)
+        Debug.Print "retval:" & retval
         ' JVReadエラー処理
         If (retval < -1) Then
             Debug.Print "7:" & Err.Description
@@ -530,8 +536,12 @@ Sub GetRaceUma(targdate, targJyo, racenum)
             UserForm1.JVLink1.JVSkip
         End If
         UserForm1.Label1.Caption = buff
+        
+        cntWhile = cntWhile + 1
+'        Debug.Print "cntWhile:" & cntWhile
         DoEvents
     Wend
+    
     
     UserForm1.JVLink1.JVClose
     
