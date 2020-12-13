@@ -26,6 +26,7 @@ Sub GetDate()
     strdate = Val(Format(Date, "yyyy")) - 4 & Format(Date, "mmdd")
     retval = UserForm1.JVLink1.JVOpen("YSCH", strdate & "000000", 4, readcount, dlcount, lastfiletimestamp)
     If (retval < -1) Then
+        Debug.Print "17:" & Err.Description
         MsgBox ("JVOpenエラー。RC=" & retval)
         GoTo CommandButton1_END
     End If
@@ -40,11 +41,12 @@ Sub GetDate()
         retval = UserForm1.JVLink1.JVRead(buff, 40000, filename)
         ' JVReadエラー処理
         If (retval < -1) Then
+            Debug.Print "18:" & Err.Description
             MsgBox ("JVReadエラー。RC=" & retval)
             GoTo CommandButton1_END
         End If
         
-        If Left(buff, 2) = "YS" Then
+        If Left(buff, 2) = "YS" And filename <> "YSMW2020999920200406150936.jvd" Then
             Call SetData_YS(buff, mYsData)
             ' 本日を超えたらループ抜ける
 '            If Val(mYsData.id.Year & mYsData.id.MonthDay) > Val(Format(DateAdd("d", 1, Date), "yyyymmdd")) Then
@@ -54,6 +56,7 @@ Sub GetDate()
             If Val(mYsData.id.JyoCD) <= 10 Then
                 rowT = findAlreadyDate(mYsData.id.Year & mYsData.id.MonthDay)
                 tmpJyo = JyoCord(mYsData.id.JyoCD)
+                
                 If rowT = 0 Then
                     WSbase.Cells(cnt, 1) = mYsData.id.Year & mYsData.id.MonthDay
                     WSbase.Cells(cnt, 2) = tmpJyo
@@ -74,6 +77,8 @@ Sub GetDate()
         Else
             UserForm1.JVLink1.JVSkip
         End If
+        
+        DoEvents
         
     Wend
 
@@ -147,6 +152,7 @@ Function isFindDate(strdateTarg As String, placeTarg As String, racenumTarg As I
     'セットアップデータの呼び出し
     retval = UserForm1.JVLink1.JVOpen("YSCH", Format(dateTarg, "yyyymmdd") & "000000", opt, readcount, dlcount, lastfiletimestamp)
     If (retval < -1) Then
+        Debug.Print "19:" & Err.Description
         MsgBox ("JVOpenエラー。RC=" & retval)
         GoTo CommandButton1_END
     End If
@@ -154,6 +160,7 @@ Function isFindDate(strdateTarg As String, placeTarg As String, racenumTarg As I
     While retval <> 0
         retval = UserForm1.JVLink1.JVRead(buff, 40000, filename)
         If (retval < -1) Then
+            Debug.Print "1:" & Err.Description
             MsgBox ("JVReadエラー。RC=" & retval)
             GoTo CommandButton1_END
         End If
@@ -176,6 +183,8 @@ Function isFindDate(strdateTarg As String, placeTarg As String, racenumTarg As I
         Else
             UserForm1.JVLink1.JVSkip
         End If
+        
+        DoEvents
         
     Wend
 
@@ -211,6 +220,7 @@ Sub GetPlaceInfo(targdate)
     '蓄積系データのRACEをListBoxの日付以降について取り込み呼び出し
     retval = UserForm1.JVLink1.JVOpen("RACE", targdate - 1 & "000000", 1, readcount, dlcount, lastfiletimestamp)
     If (retval < -1) Then
+        Debug.Print "2:" & Err.Description
         MsgBox ("JVOpenエラー。RC=" & retval)
         GoTo LOOP_END
     End If
@@ -235,6 +245,7 @@ Sub GetPlaceInfo(targdate)
         'JVOpenで指定したデータを１レコードずつ取り込み
         retval = UserForm1.JVLink1.JVRead(buff, 40000, filename)
         If (retval < -1) Then
+            Debug.Print "3:" & Err.Description
             MsgBox ("JVReadエラー。RC=" & retval)
             GoTo LOOP_END
         End If
@@ -302,6 +313,7 @@ Sub GetPlaceInfoZ(targdate)
             Do While WSbase.Cells(i, j) <> ""
                 UserForm1.ListBox4.AddItem WSbase.Cells(i, j)
                 j = j + 1
+                DoEvents
             Loop
             Exit Sub
         End If
@@ -343,6 +355,7 @@ Sub GetRaceNumInfo(targdate, targJyo)
     '蓄積系データのRACEをListBoxの日付以降について取り込み呼び出し
     retval = UserForm1.JVLink1.JVOpen("RACE", Format(dateTarg, "yyyymmdd") & "000000", opt, readcount, dlcount, lastfiletimestamp)
     If (retval < -1) Then
+        Debug.Print "4:" & Err.Description
         MsgBox ("JVOpenエラー。RC=" & retval)
         GoTo CommandButton1_END
     End If
@@ -353,6 +366,7 @@ Sub GetRaceNumInfo(targdate, targJyo)
     DLflg = True
     UserForm1.CommandButton3.Caption = "キャンセル"
     Do While status <> dlcount
+        Debug.Print "discount=" & CStr(discount)
         'キャンセルボタンチェック
         If Cancelflg = True Then Exit Do
         status = UserForm1.JVLink1.JVStatus
@@ -370,6 +384,7 @@ Sub GetRaceNumInfo(targdate, targJyo)
         'JVOpenで指定したデータを１レコードずつ取り込み
         retval = UserForm1.JVLink1.JVRead(buff, 40000, filename)
         If (retval < -1) Then
+            Debug.Print "5:" & Err.Description
             MsgBox ("JVReadエラー。RC=" & retval)
             GoTo CommandButton1_END
         End If
@@ -450,6 +465,7 @@ Sub GetRaceUma(targdate, targJyo, racenum)
     retval = UserForm1.JVLink1.JVOpen("RACE", targdate - 1 & "000000", opt, readcount, dlcount, lastfiletimestamp)
     'JVOpenエラー処理
     If (retval < -1) Then
+        Debug.Print "6:" & Err.Description
         MsgBox ("JVOpenエラー " & retval)
         GoTo CommandButton1_END
     End If
@@ -481,6 +497,7 @@ Sub GetRaceUma(targdate, targJyo, racenum)
         retval = UserForm1.JVLink1.JVRead(buff, 40000, filename)
         ' JVReadエラー処理
         If (retval < -1) Then
+            Debug.Print "7:" & Err.Description
             MsgBox ("JVReadエラー。RC=" & retval)
             GoTo CommandButton1_END
         End If

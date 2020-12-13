@@ -95,6 +95,7 @@ LOOP_END2:
 
 LOOP_END1:
 ERROR_PROCESS:
+    Debug.Print "14:" & Err.Description
     MsgBox "ÉGÉâÅ[ " & retval
     
 End Sub
@@ -192,6 +193,7 @@ Sub GetStockUmatanOddsText(datacsv As datacsv, strdateTarg As String, _
                         collUmatanOdds.Add UmatanOdd
                         Set UmatanOdd = Nothing
                     End If
+                    DoEvents
                 Next i
             End If
         ElseIf isCalcSanrentan And Left(buff, 2) = "O6" Then
@@ -224,6 +226,7 @@ Sub GetStockUmatanOddsText(datacsv As datacsv, strdateTarg As String, _
                             
                             Set OddsSanrenta = Nothing
                         End If
+                        DoEvents
                     Next
                 End If
             End If

@@ -51,6 +51,14 @@ Private Sub CommandButton4_Click()
 End Sub
 
 Private Sub ListBox1_Click()
+
+    Me.ListBox2.Locked = True
+    Me.ListBox3.Locked = True
+    Me.ListBox4.Locked = True
+    Me.ListBox5.Locked = True
+    Me.ListBox6.Locked = True
+    Me.CommandButton5.Locked = True
+
     Me.ListBox2.Clear
     Me.ListBox3.Clear
     Me.ListBox4.Clear
@@ -70,9 +78,24 @@ Private Sub ListBox1_Click()
         End If
     Next i
     
+    Me.ListBox2.Locked = False
+    Me.ListBox3.Locked = False
+    Me.ListBox4.Locked = False
+    Me.ListBox5.Locked = False
+    Me.ListBox6.Locked = False
+    Me.CommandButton5.Locked = False
+    
 End Sub
 
 Private Sub ListBox2_Click()
+
+    Me.ListBox1.Locked = True
+    Me.ListBox3.Locked = True
+    Me.ListBox4.Locked = True
+    Me.ListBox5.Locked = True
+    Me.ListBox6.Locked = True
+    Me.CommandButton5.Locked = True
+
     Me.ListBox3.Clear
     Me.ListBox4.Clear
     Me.ListBox5.Clear
@@ -91,9 +114,24 @@ Private Sub ListBox2_Click()
         End If
     Next i
 
+    Me.ListBox1.Locked = False
+    Me.ListBox3.Locked = False
+    Me.ListBox4.Locked = False
+    Me.ListBox5.Locked = False
+    Me.ListBox6.Locked = False
+    Me.CommandButton5.Locked = False
+    
 End Sub
 
 Private Sub ListBox3_Click()
+
+    Me.ListBox1.Locked = True
+    Me.ListBox2.Locked = True
+    Me.ListBox4.Locked = True
+    Me.ListBox5.Locked = True
+    Me.ListBox6.Locked = True
+    Me.CommandButton5.Locked = True
+
     Me.ListBox4.Clear
     Me.ListBox5.Clear
     Me.ListBox6.Clear
@@ -110,9 +148,24 @@ Private Sub ListBox3_Click()
     
     Call GetPlaceInfoZ(targdate)
     
+    Me.ListBox1.Locked = False
+    Me.ListBox2.Locked = False
+    Me.ListBox4.Locked = False
+    Me.ListBox5.Locked = False
+    Me.ListBox6.Locked = False
+    Me.CommandButton5.Locked = False
+    
 End Sub
 
 Private Sub ListBox4_Click()
+
+    Me.ListBox1.Locked = True
+    Me.ListBox2.Locked = True
+    Me.ListBox3.Locked = True
+    Me.ListBox5.Locked = True
+    Me.ListBox6.Locked = True
+    Me.CommandButton5.Locked = True
+
     Me.ListBox5.Clear
     Me.ListBox6.Clear
     
@@ -127,9 +180,25 @@ Private Sub ListBox4_Click()
         targJyo = Me.ListBox4.Text
     End If
     Call GetRaceNumInfo(targdate, targJyo)
+    
+    Me.ListBox1.Locked = False
+    Me.ListBox2.Locked = False
+    Me.ListBox3.Locked = False
+    Me.ListBox5.Locked = False
+    Me.ListBox6.Locked = False
+    Me.CommandButton5.Locked = False
+    
 End Sub
 
 Private Sub ListBox5_Click()
+
+    Me.ListBox1.Locked = True
+    Me.ListBox2.Locked = True
+    Me.ListBox3.Locked = True
+    Me.ListBox4.Locked = True
+    Me.ListBox6.Locked = True
+    Me.CommandButton5.Locked = True
+
     Me.ListBox6.Clear
     
     If Me.ListBox1.Text = "" Or _
@@ -146,12 +215,21 @@ Private Sub ListBox5_Click()
     End If
     
     Call GetRaceUma(targdate, targJyo, racenum)
+    
+    Me.ListBox1.Locked = False
+    Me.ListBox2.Locked = False
+    Me.ListBox3.Locked = False
+    Me.ListBox4.Locked = False
+    Me.ListBox6.Locked = False
+    Me.CommandButton5.Locked = False
+    
 End Sub
 
 Private Sub CommandButton2_Click()
     retval = JVLink1.JVSetUIProperties()
     'JVSetUIPropatiesエラー処理
     If (retval < -1) Then
+        Debug.Print "16:" & Err.Description
         MsgBox ("エラーのためJV-Linkの設定に失敗しました。")
     End If
 End Sub
@@ -165,6 +243,15 @@ Private Sub CommandButton3_Click()
 End Sub
 
 Private Sub CommandButton5_Click()
+
+    Me.ListBox1.Locked = True
+    Me.ListBox2.Locked = True
+    Me.ListBox3.Locked = True
+    Me.ListBox4.Locked = True
+    Me.ListBox5.Locked = True
+    Me.ListBox6.Locked = True
+    Me.CommandButton5.Locked = True
+
     If Me.ListBox1.Text = "" Or _
        Me.ListBox2.Text = "" Or _
        Me.ListBox3.Text = "" Or _
@@ -182,4 +269,13 @@ Private Sub CommandButton5_Click()
     Dim isCalcSanrentan As Boolean
     isCalcSanrentan = Me.CheckBox1.Value
     Call getUmatanOdds(CStr(targdate), CStr(targJyo), CInt(racenum), isCalcSanrentan)
+    
+    Me.ListBox1.Locked = False
+    Me.ListBox2.Locked = False
+    Me.ListBox3.Locked = False
+    Me.ListBox4.Locked = False
+    Me.ListBox5.Locked = False
+    Me.ListBox6.Locked = False
+    Me.CommandButton5.Locked = False
+    
 End Sub

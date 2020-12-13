@@ -198,6 +198,7 @@ LOOP_END2:
 
 LOOP_END1:
 ERROR_PROCESS:
+    Debug.Print "15:" & Err.Description
     MsgBox "ÉGÉâÅ[ " & retval
 End Function
 

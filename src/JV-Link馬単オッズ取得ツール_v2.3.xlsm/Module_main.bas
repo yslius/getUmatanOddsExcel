@@ -39,6 +39,7 @@ startTime = Timer
     retval = UserForm1.JVLink1.JVOpen("SLOP", strStartdate & "000000", 1, readcount, dlcount, lastfiletimestamp)
     'JVOpenエラー処理
     If (retval < -1) Then
+        Debug.Print "8:" & Err.Description
         MsgBox ("JVOpenエラー " & retval)
         GoTo CommandButton1_END
     End If
@@ -68,6 +69,7 @@ startTime = Timer
         retval = UserForm1.JVLink1.JVRead(buff, 40000, filename)
         ' JVReadエラー処理
         If (retval < -1) Then
+            Debug.Print "9:" & Err.Description
             MsgBox ("JVReadエラー。RC=" & retval)
             GoTo CommandButton1_END
         End If
@@ -121,6 +123,7 @@ startTime = Timer
         Else
             UserForm1.JVLink1.JVSkip
         End If
+        DoEvents
 LOOP_NEXT:
     Wend
 
@@ -199,6 +202,7 @@ startTime = Timer
     retval = UserForm1.JVLink1.JVOpen("SLOP", strStartdate & "000000", 1, readcount, dlcount, lastfiletimestamp)
     'JVOpenエラー処理
     If (retval < -1) Then
+        Debug.Print "10:" & Err.Description
         MsgBox ("JVOpenエラー " & retval)
         GoTo CommandButton1_END
     End If
@@ -228,6 +232,7 @@ startTime = Timer
         retval = UserForm1.JVLink1.JVRead(buff, 40000, filename)
         ' JVReadエラー処理
         If (retval < -1) Then
+            Debug.Print "11:" & Err.Description
             MsgBox ("JVReadエラー。RC=" & retval)
             GoTo CommandButton1_END
         End If
@@ -281,6 +286,7 @@ startTime = Timer
         Else
             UserForm1.JVLink1.JVSkip
         End If
+        DoEvents
 LOOP_NEXT:
     Wend
 

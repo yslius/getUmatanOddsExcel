@@ -70,6 +70,7 @@ Sub writeAddHeadData(datacsv As datacsv)
             datacsv.setData(rowTarget + 1, 31 + i) = arrAddTrain(i)
         Next i
         rowTarget = rowTarget + datacsv.getData(rowTarget, 4) + 3
+        DoEvents
     Loop
 End Sub
 

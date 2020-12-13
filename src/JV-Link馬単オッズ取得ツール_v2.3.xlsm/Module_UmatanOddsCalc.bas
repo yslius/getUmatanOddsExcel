@@ -103,6 +103,7 @@ Sub CreateCompositeOdds(datacsv As datacsv, _
                 End If
             Next
             If denom > 0 Then collUmatanOdds.item(i).SyntheticOdds2 = Format(1 / denom, "0.0")
+            DoEvents
         Next i
     End If
     

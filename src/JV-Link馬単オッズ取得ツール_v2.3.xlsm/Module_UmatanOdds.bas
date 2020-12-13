@@ -99,6 +99,7 @@ ERROR_PROCESS:
     Beep
     Unload UserForm_Wait
     UserForm1.JVLink1.JVClose
+    Debug.Print "12:" & Err.Description
     MsgBox "ÉGÉâÅ[ " & retval
     
 End Sub
