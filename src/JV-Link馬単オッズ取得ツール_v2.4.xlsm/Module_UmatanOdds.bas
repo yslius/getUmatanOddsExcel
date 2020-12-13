@@ -92,7 +92,12 @@ END_PROCESS:
     End With
                         
     Beep
-    MsgBox "終了しました。"
+'    MsgBox "終了しました。"
+    UserForm_End.Label1.Caption = "正常に終了しました。"
+    UserForm_End.Show vbModeless
+    DoEvents
+    Sleep 1000
+    Unload UserForm_End
     Exit Sub
     
 ERROR_PROCESS:

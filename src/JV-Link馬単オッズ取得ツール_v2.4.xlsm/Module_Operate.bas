@@ -309,12 +309,17 @@ Sub GetPlaceInfoZ(targdate)
     
     For i = 1 To endR
         If Val(targdate) = WSbase.Cells(i, 1) Then
-            j = 2
-            Do While WSbase.Cells(i, j) <> ""
-                UserForm1.ListBox4.AddItem WSbase.Cells(i, j)
-                j = j + 1
-                DoEvents
-            Loop
+'            j = 2
+'            Do While WSbase.Cells(i, j) <> ""
+'                UserForm1.ListBox4.AddItem WSbase.Cells(i, j)
+'                j = j + 1
+'                DoEvents
+'            Loop
+            For j = 2 To 4
+                If WSbase.Cells(i, j) <> "" Then
+                    UserForm1.ListBox4.AddItem WSbase.Cells(i, j)
+                End If
+            Next j
             Exit Sub
         End If
     Next i
