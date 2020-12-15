@@ -84,6 +84,7 @@ LOOP_NEXT1:
     
 LOOP_END2:
 
+    '一度テキストに書き出して読み取る
     Dim strOutputFile As String
     Dim strOutput As Variant
     strOutputFile = ThisWorkbook.Path & "\buff.txt"
@@ -133,20 +134,12 @@ Sub GetStockUmatanOddsText(datacsv As datacsv, strdateTarg As String, _
     Dim mH1Data As JV_H1_HYOSU_ZENKAKE
     
     Dim UmatanOdd As UmatanOdds
-    Dim RaceUm As RaceUma
-    Dim OddsSanrenta As OddsSanrentan
+    Dim cRaceUma As RaceUma
+    Dim cOddsSanrentan As OddsSanrentan
     Dim buff As String
     Dim strOutput As String
-    Dim strOutputFile2 As String
     
-    strOutputFile2 = ThisWorkbook.Path & "\OddsSanrenta.txt"
     Open strOutputFile For Input As #1
-    Open strOutputFile2 For Append As #2
-'    Do While Not EOF(1)
-'        Line Input #1, buff
-''        Debug.Print Trim(buff)
-'    Loop
-'    Close #1
     
     Do While Not EOF(1)
         Line Input #1, buff
@@ -172,11 +165,11 @@ Sub GetStockUmatanOddsText(datacsv As datacsv, strdateTarg As String, _
                 Val(mO1Data.id.racenum) = racenumTarg Then
                 For i = 0 To 18  'UBound(mO1Data.OddsTansyoInfo)
                     If Trim(mO1Data.OddsTansyoInfo(i).Umaban) <> "" Then
-                        Set RaceUm = New RaceUma
-                        RaceUm.Umaban = Val(mO1Data.OddsTansyoInfo(i).Umaban)
-                        RaceUm.Ninki = Val(mO1Data.OddsTansyoInfo(i).Ninki)
-                        collUmatanOddsO1.Add RaceUm
-                        Set RaceUm = Nothing
+                        Set cRaceUma = New RaceUma
+                        cRaceUma.Umaban = Val(mO1Data.OddsTansyoInfo(i).Umaban)
+                        cRaceUma.Ninki = Val(mO1Data.OddsTansyoInfo(i).Ninki)
+                        collUmatanOddsO1.Add cRaceUma
+                        Set cRaceUma = Nothing
                     End If
                 Next i
             End If
@@ -208,29 +201,21 @@ Sub GetStockUmatanOddsText(datacsv As datacsv, strdateTarg As String, _
                 strJyo = JyoCord(mO6Data.id.JyoCD)
                 If strJyo = placeTarg And _
                     Val(mO6Data.id.racenum) = racenumTarg Then
-'                    Debug.Print (mO6Data.OddsSanrentanInfo.Count)
                     For Each OddsSanrentanInfo In mO6Data.OddsSanrentanInfo
                         If Trim(OddsSanrentanInfo.Kumi) <> "" And _
                            Trim(OddsSanrentanInfo.Odds <> "") And _
                             Val(OddsSanrentanInfo.Odds) <> 0 And _
                             InStr(OddsSanrentanInfo.Odds, "-") = 0 And _
                             InStr(OddsSanrentanInfo.Odds, "*") = 0 Then
-                            Set OddsSanrenta = New OddsSanrentan
-                            OddsSanrenta.Kumi = OddsSanrentanInfo.Kumi
-                            OddsSanrenta.Umaban1 = Val(Left(OddsSanrentanInfo.Kumi, 2))
-                            OddsSanrenta.Umaban2 = Val(Mid(OddsSanrentanInfo.Kumi, 3, 2))
-                            OddsSanrenta.Umaban3 = Val(Right(OddsSanrentanInfo.Kumi, 2))
-                            OddsSanrenta.OddsSanrentan = Format(Val(OddsSanrentanInfo.Odds / 10), "0.0")
-                            collOddsSanrentan.Add OddsSanrenta
+                            Set cOddsSanrentan = New OddsSanrentan
+                            cOddsSanrentan.Kumi = OddsSanrentanInfo.Kumi
+                            cOddsSanrentan.Umaban1 = Val(Left(OddsSanrentanInfo.Kumi, 2))
+                            cOddsSanrentan.Umaban2 = Val(Mid(OddsSanrentanInfo.Kumi, 3, 2))
+                            cOddsSanrentan.Umaban3 = Val(Right(OddsSanrentanInfo.Kumi, 2))
+                            cOddsSanrentan.OddsSanrentan = Format(Val(OddsSanrentanInfo.Odds / 10), "0.0")
+                            collOddsSanrentan.Add cOddsSanrentan
                             
-'                            strOutput = OddsSanrenta.Umaban1 & " " &
-'                                        OddsSanrenta.Umaban2 & " " & _
-'                                        OddsSanrenta.Umaban3 & " " & _
-'                                        OddsSanrenta.OddsSanrentan
-'
-'                            Print #2, strOutput
-                            
-                            Set OddsSanrenta = Nothing
+                            Set cOddsSanrentan = Nothing
                         End If
                         DoEvents
                     Next
@@ -244,7 +229,6 @@ Sub GetStockUmatanOddsText(datacsv As datacsv, strdateTarg As String, _
     Close #1
     Close #2
 
-'    Debug.Print collOddsSanrentan.Count
     UserForm_Wait.Label1.Caption = strdateTarg & " " & placeTarg & " " & _
                                     StrConv(Format(racenumTarg, "00"), vbWide) & _
                                     vbCrLf & " 馬単オッズ計算中です。"
@@ -252,7 +236,6 @@ Sub GetStockUmatanOddsText(datacsv As datacsv, strdateTarg As String, _
     Call CreateCompositeOdds(datacsv, collUmatanOddsO1, _
                             collUmatanOddsH1, collUmatanOdds, _
                             collOddsSanrentan, isCalcSanrentan)
-    
 
 End Sub
 

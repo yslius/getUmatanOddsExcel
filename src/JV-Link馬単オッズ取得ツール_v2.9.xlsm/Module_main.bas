@@ -1,4 +1,4 @@
-Attribute VB_Name = "Module_UmatanOdds"
+Attribute VB_Name = "Module_main"
 Option Explicit
 
 Sub getUmatanOdds(strdateTarg As String, placeTarg As String, racenumTarg As Integer, _

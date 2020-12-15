@@ -267,7 +267,7 @@ Private Sub ListBox3_Click()
         Call putPreviousDate(targdate)
     End If
     
-    Call GetPlaceInfoZ(targdate)
+    Call GetPlaceInfo(targdate)
     
     Me.ListBox1.Locked = False
     Me.ListBox2.Locked = False

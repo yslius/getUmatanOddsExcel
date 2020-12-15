@@ -2964,7 +2964,7 @@ Public Sub SetData_O6Z(lBuf As String, ByRef mBuf As JV_O6_ODDS_SANRENTAN2)
         .SanrentanFlag = IncMid(bytBuf, p, 1)               '' 発売フラグ　3連単
         Set .OddsSanrentanInfo = New Collection
         For i = 0 To 4895
-            Set cOddssanrentaninfo = New cODDS_SANRENTAN_INFO
+            Set cOddssanrentaninfo = New clsODDS_SANRENTAN_INFO
             cOddssanrentaninfo.Kumi = IncMid(bytBuf, p, 6)
             cOddssanrentaninfo.Odds = IncMid(bytBuf, p, 7)
             cOddssanrentaninfo.Ninki = IncMid(bytBuf, p, 4)

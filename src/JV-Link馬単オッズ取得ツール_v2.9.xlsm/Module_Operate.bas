@@ -198,110 +198,7 @@ CommandButton1_END:
     
 End Function
 
-
 Sub GetPlaceInfo(targdate)
-    Dim retval As Long
-    Dim readcount As Long
-    Dim dlcount As Long
-    Dim lastfiletimestamp As String
-    Dim status As Long
-    Dim buff As String
-    Dim filename As String
-
-    Cancelflg = False
-    DLflg = False
-    UserForm1.ListBox4.Clear
-    
-'    If Val(Format(Date, "yyyymmdd")) < Val(targdate) - 1 Then
-'        targdate = Format(Date, "yyyymmdd")
-'    End If
-
-    'JVLinkを初期化
-    UserForm1.JVLink1.JVClose
-    UserForm1.JVLink1.JVInit ("EXCELSAMPLE")
-    '蓄積系データのRACEをListBoxの日付以降について取り込み呼び出し
-    retval = UserForm1.JVLink1.JVOpen("RACE", targdate - 1 & "000000", 1, readcount, dlcount, lastfiletimestamp)
-    If (retval < -1) Then
-        Debug.Print "2:" & Err.Description
-        MsgBox ("JVOpenエラー。RC=" & retval)
-        GoTo LOOP_END
-    End If
-
-    Dim mRaData As JV_RA_RACE
-   
-    status = 0
-    DLflg = True
-    UserForm1.CommandButton3.Caption = "キャンセル"
-    Do While status <> dlcount
-        'キャンセルボタンチェック
-        If Cancelflg = True Then Exit Do
-        status = UserForm1.JVLink1.JVStatus
-        UserForm1.Label1.Caption = dlcount & "ファイル中 " & status & " ファイルダウンロード完了"
-        DoEvents
-        Sleep (10)
-    Loop
-    
-    retval = 1
-    isGetData = False
-    While retval <> 0
-        'JVOpenで指定したデータを１レコードずつ取り込み
-        retval = UserForm1.JVLink1.JVRead(buff, 40000, filename)
-        If (retval < -1) Then
-            Debug.Print "3:" & Err.Description
-            MsgBox ("JVReadエラー。RC=" & retval)
-            GoTo LOOP_END
-        End If
-
-        If Left(buff, 2) = "RA" Then
-
-            Call SetData_RA(buff, mRaData)
-            
-            ' 選んだ日付を超えたらループ抜ける
-            If isGetData = True And Val(mRaData.id.Year & mRaData.id.MonthDay) > Val(targdate) Then
-                GoTo LOOP_END
-            End If
-            
-            If mRaData.id.Year & mRaData.id.MonthDay = targdate Then
-                tmpJyo = JyoCord(mRaData.id.JyoCD)
-                If Val(mRaData.id.JyoCD) <= 10 Then
-                    isFind = False
-                    For i = 0 To UserForm1.ListBox4.ListCount - 1
-                        If UserForm1.ListBox4.List(i) = tmpJyo Then
-                            isFind = True
-                            Exit For
-                        End If
-                    Next i
-                    If isFind = False Then
-                        isGetData = True
-                        UserForm1.ListBox4.AddItem tmpJyo
-                    End If
-                End If
-            End If
-
-        Else
-            UserForm1.JVLink1.JVSkip
-        End If
-                
-        UserForm1.Label1.Caption = buff
-        DoEvents
-    Wend
-
-LOOP_END:
-
-    UserForm1.JVLink1.JVClose
-    
-    If Cancelflg = True Then
-        MsgBox "キャンセルされました。"
-    Else
-        UserForm1.Label1.Caption = "読み込みが終了しました。"
-    End If
-    UserForm1.CommandButton3.Caption = "Exit"
-    DLflg = False
-
-End Sub
-
-
-Sub GetPlaceInfoZ(targdate)
     
     Set WBbase = ThisWorkbook
     Set WSbase = WBbase.Sheets("開催日")
@@ -553,6 +450,7 @@ CommandButton1_END:
     UserForm1.CommandButton5.Enabled = True
 End Sub
 
+
 Function CreateCSVData(WS) As String
     Dim CSVData As String
     With WS
@@ -590,62 +488,6 @@ Function CreateCSVData(WS) As String
     End With
 End Function
 
-
-Function CreateCSVDataZ(WS) As String
-    Dim CSVData As String
-    With WS
-    
-    Dim region As Range
-    Dim row As Range
-    Set region = .Cells(1, 1).CurrentRegion
-    
-    For i = 3 To region.Rows.Count  ' 行のループ
-        Line = ""
-        For j = 1 To 12 ' 列のループ
-            ' カンマ区切りで結合
-            Dim item As Variant
-            item = .Cells(i, j).Value
-            If Line = "" Then
-                Line = item
-            Else
-                Line = Line & "," & item
-            End If
-        Next
-        ' 行を結合
-        If CSVData = "" Then
-            CSVData = Line
-        Else
-            CSVData = CSVData & vbCrLf & Line
-        End If
-    Next
-    
-    CreateCSVDataZ = CSVData
-    
-    End With
-End Function
-
-
-Sub OutputLog(datalog)
-    fileLog = ThisWorkbook.Path & "\" & "log_" & Format(Date, "yyyymmdd") & ".txt"
-    
-    Open fileLog For Append As #1
-        Print #1, datalog
-    Close #1
-End Sub
-
-
-Function getrowT(WStarg, strShortJyo, racenum) As Integer
-    With WStarg
-        rowEnd = .Cells(.Rows.Count, 1).End(xlUp).row
-        For i = 1 To rowEnd
-            If InStr(.Cells(i, 3), strShortJyo) And _
-               .Cells(i, 6) = racenum Then
-               getrowT = i
-               Exit Function
-            End If
-        Next i
-    End With
-End Function
 
 
 

@@ -171,7 +171,7 @@ SKIPHYOU:
     '    Call SetData_O6(buff, mO6Data(0))
         Call SetData_O6Z(buff, mO6Data)
         
-        Dim OddsSanrenta As OddsSanrentan
+        Dim cOddsSanrentan As OddsSanrentan
         
         For Each OddsSanrentanInfo In mO6Data.OddsSanrentanInfo
             If Trim(OddsSanrentanInfo.Kumi) <> "" And _
@@ -179,14 +179,14 @@ SKIPHYOU:
                 Val(OddsSanrentanInfo.Odds) <> 0 And _
                 InStr(OddsSanrentanInfo.Odds, "-") = 0 And _
                 InStr(OddsSanrentanInfo.Odds, "*") = 0 Then
-                Set OddsSanrenta = New OddsSanrentan
-                OddsSanrenta.Kumi = OddsSanrentanInfo.Kumi
-                OddsSanrenta.Umaban1 = Val(Left(OddsSanrentanInfo.Kumi, 2))
-                OddsSanrenta.Umaban2 = Val(Mid(OddsSanrentanInfo.Kumi, 3, 2))
-                OddsSanrenta.Umaban3 = Val(Right(OddsSanrentanInfo.Kumi, 2))
-                OddsSanrenta.OddsSanrentan = Format(Val(OddsSanrentanInfo.Odds / 10), "0.0")
-                collOddsSanrentan.Add OddsSanrenta
-                Set OddsSanrenta = Nothing
+                Set cOddsSanrentan = New OddsSanrentan
+                cOddsSanrentan.Kumi = OddsSanrentanInfo.Kumi
+                cOddsSanrentan.Umaban1 = Val(Left(OddsSanrentanInfo.Kumi, 2))
+                cOddsSanrentan.Umaban2 = Val(Mid(OddsSanrentanInfo.Kumi, 3, 2))
+                cOddsSanrentan.Umaban3 = Val(Right(OddsSanrentanInfo.Kumi, 2))
+                cOddsSanrentan.OddsSanrentan = Format(Val(OddsSanrentanInfo.Odds / 10), "0.0")
+                collOddsSanrentan.Add cOddsSanrentan
+                Set cOddsSanrentan = Nothing
             End If
         Next
         
